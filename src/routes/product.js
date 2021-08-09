@@ -9,6 +9,7 @@ const {
   createProduct,
   getProductsBySlug,
   getProductDetailsById,
+  getProductsBySearchTerm,
   deleteProductById,
   getProducts,
 } = require("../controller/product");
@@ -36,7 +37,7 @@ router.post(
   createProduct
 );
 router.get("/products/:slug", getProductsBySlug);
-//router.get('/category/getcategory', getCategories);
+router.get('/product/:searchTerm', getProductsBySearchTerm);
 router.get("/product/:productId", getProductDetailsById);
 router.delete(
   "/product/deleteProductById",

@@ -85,6 +85,32 @@ exports.getProductsBySlug = (req, res) => {
     });
 };
 
+exports.getProductsBySearchTerm = (req, res) => {
+  const { searchTerm } = req.params;
+  console.log(searchTerm);
+  Product.find({ "Title": { "$regex": searchTerm, "$options": "i" }}).exec((error, productResult) => {
+      if (error) {
+        return res.status(400).json({ error });
+      }
+    if (productResult.length > 0) {
+          const uniqueProducts = productResult.sort((a, b) => a.Price < b.Price ? - 1 : Number(a.Price > b.Price))
+
+          const getUniqueBy = (arr, prop) => {
+            const set = new Set;
+            return arr.filter(o => !set.has(o[prop]) && set.add(o[prop]));
+          };
+
+          let products = getUniqueBy(uniqueProducts, 'vendor')
+
+          res.status(200).json({
+            products,
+          });
+        }else {
+          res.status(400).json({ productResult });
+        }
+    });
+};
+
 exports.getProductDetailsById = (req, res) => {
   const { productId } = req.params;
   if (productId) {
